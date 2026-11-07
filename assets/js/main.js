@@ -193,54 +193,40 @@
   --------------------------------------------------------------*/
   // Contact Form
   function formValidation() {
-    if ($.exists('#contact-form #submit')) {
+    var $form = $('#contact-form');
+    if ($form.length) {
       $('#st-alert').hide();
-      $('#contact-form #submit').on('click', function () {
-        var name = $('#name').val();
-        var subject = $('#subject').val();
-        var phone = $('#phone').val();
-        var email = $('#email').val();
-        var msg = $('#msg').val();
-        var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+      $form.on('submit', function (e) {
+        e.preventDefault();
+        var $btn = $form.find('button[type="submit"]');
+        var originalBtnText = $btn.text();
+        $btn.prop('disabled', true).text('Sending...');
 
-        if (!regex.test(email)) {
-          $('#st-alert').fadeIn().html('<div class="alert alert-danger"><strong>Warning!</strong> Please Enter Valid Email.</div>');
-          return false;
-        }
+        var actionUrl = $form.attr('action');
+        var formData = new URLSearchParams(new FormData($form[0]));
 
-        name = $.trim(name);
-        subject = $.trim(subject);
-        phone = $.trim(phone);
-        email = $.trim(email);
-        msg = $.trim(msg);
-
-        if (name != '' && email != '' && msg != '') {
-          var values = "name=" + name +
-            "&subject=" + subject +
-            "&phone=" + phone +
-            "&email=" + email +
-            "&msg=" + msg;
-          $.ajax({
-            type: "POST",
-            url: "assets/php/mail.php",
-            data: values,
-            success: function () {
-              $('#name').val('');
-              $('#subject').val('');
-              $('#phone').val('');
-              $('#email').val('');
-              $('#msg').val('');
-
-              $('#st-alert').fadeIn().html('<div class="alert alert-success"><strong>Success!</strong> Email has been sent successfully.</div>');
-              setTimeout(function () {
-                $('#st-alert').fadeOut('slow');
-              }, 4000);
-            }
-          });
-        } else {
-          $('#st-alert').fadeIn().html('<div class="alert alert-danger"><strong>Warning!</strong> All fields are required.</div>');
-        }
-        return false;
+        fetch(actionUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: formData
+        }).then(function () {
+          $form[0].reset();
+          $btn.prop('disabled', false).text(originalBtnText);
+          $('#st-alert')
+            .html('<div class="alert alert-success" style="background:rgba(40,167,69,0.15);border:1px solid #28a745;color:#28a745;padding:12px 18px;border-radius:6px;margin-bottom:20px;"><strong>Success!</strong> Thank you, your message has been sent successfully.</div>')
+            .fadeIn();
+          setTimeout(function () {
+            $('#st-alert').fadeOut('slow');
+          }, 5000);
+        }).catch(function () {
+          $btn.prop('disabled', false).text(originalBtnText);
+          $('#st-alert')
+            .html('<div class="alert alert-danger" style="background:rgba(220,53,69,0.15);border:1px solid #dc3545;color:#dc3545;padding:12px 18px;border-radius:6px;margin-bottom:20px;"><strong>Error!</strong> Something went wrong. Please try again.</div>')
+            .fadeIn();
+        });
       });
     }
   }

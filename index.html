@@ -711,6 +711,8 @@
             </div>
           </div>
         </div>
+      </div>
+
       <div class="col-lg-4 col-md-6">
         <div class="st-portfolio-single st-style1">
           <div class="st-portfolio-item">
@@ -1273,21 +1275,51 @@
         <h3 class="st-contact-title">Get in Touch
         </h3>
         <div id="st-alert"></div>
-        <form action="https://docs.google.com/forms/d/e/1FAIpQLSfmAi-ZAfuasMue3ZErVGYSpW4auTkCRDqFt6B8tFAEIjordw/formResponse" method="POST" class="st-contact-form" id="contact-form">
+        <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(window.submitted){handleFormSuccess();}"></iframe>
+        <form action="https://docs.google.com/forms/d/e/1FAIpQLSeV6fHeqgrgP-qRVvF8JKwWr0N23D6ErOZWLV7zMBrik85wVg/formResponse" method="POST" target="hidden_iframe" onsubmit="handleFormSubmit();" class="st-contact-form" id="contact-form">
           <div class="st-form-field">
-            <input type="text" id="name" name="entry.1992021085" placeholder="Your Name" required>
+            <input type="text" id="name" name="entry.2005620554" placeholder="Your Name" required>
           </div>
           <div class="st-form-field">
-            <input type="email" id="email" name="entry.135535219" placeholder="Your Email" required>
+            <input type="email" id="email" name="entry.1045781291" placeholder="Your Email" required>
           </div>
           <div class="st-form-field">
-            <input type="text" id="subject" name="entry.893689245" placeholder="Your Subject" required>
+            <input type="text" id="subject" name="entry.1065046570" placeholder="Your Phone No" required>
           </div>
           <div class="st-form-field">
-            <textarea cols="30" rows="10" id="msg" name="entry.542794719" placeholder="Your Message" required></textarea>
+            <textarea cols="30" rows="10" id="msg" name="entry.1166974658" placeholder="Your Message" required></textarea>
           </div>
-          <button class="st-btn st-style1 st-color1" type="submit" id="submithhh" name="submit">Send message</button>
+          <button class="st-btn st-style1 st-color1" type="submit" id="submit-btn">Send message</button>
         </form>
+        <script>
+          window.submitted = false;
+          function handleFormSubmit() {
+            window.submitted = true;
+            var btn = document.getElementById('submit-btn');
+            if (btn) {
+              btn.disabled = true;
+              btn.innerText = 'Sending...';
+            }
+          }
+          function handleFormSuccess() {
+            var form = document.getElementById('contact-form');
+            if (form) form.reset();
+            var btn = document.getElementById('submit-btn');
+            if (btn) {
+              btn.disabled = false;
+              btn.innerText = 'Send message';
+            }
+            var alertBox = document.getElementById('st-alert');
+            if (alertBox) {
+              alertBox.innerHTML = '<div class="alert alert-success" style="background:rgba(40,167,69,0.15);border:1px solid #28a745;color:#28a745;padding:12px 18px;border-radius:6px;margin-bottom:20px;"><strong>Success!</strong> Thank you, your message has been sent successfully.</div>';
+              alertBox.style.display = 'block';
+              setTimeout(function() {
+                alertBox.style.display = 'none';
+              }, 5000);
+            }
+            window.submitted = false;
+          }
+        </script>
         
       </div>
       <div class="st-height-b0 st-height-lg-b30"></div>
@@ -1372,7 +1404,7 @@
   <script src="assets/js/wow.min.js"></script>
   <script src="assets/js/ripples.min.js"></script>
   <script src="assets/js/particles.min.js"></script>
-  <script src="assets/js/main.js"></script>
+  <script src="assets/js/main.js?v=2"></script>
 </body>
 
 </html>
